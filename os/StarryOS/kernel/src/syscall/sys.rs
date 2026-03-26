@@ -136,3 +136,22 @@ pub fn sys_riscv_flush_icache() -> AxResult<isize> {
     riscv::asm::fence_i();
     Ok(0)
 }
+// [StarryHacker 专属实现] 获取当前线程所在的 CPU 核心编号
+pub fn sys_getcpu(cpu: *mut u32, node: *mut u32) -> AxResult<isize> {
+    info!("sys_getcpu called! cpu ptr: {:?}, node ptr: {:?}", cpu, node);
+    
+    // 在内核底层直接操作指针是非常危险的，必须用 unsafe 块包裹
+    unsafe {
+        // 如果外部程序传进来的 cpu 指针不是空的，我们就把 0 写进去
+        if !cpu.is_null() {
+            *cpu = 0; 
+        }
+        // 同理，把 NUMA 节点也默认写为 0
+        if !node.is_null() {
+            *node = 0;
+        }
+    }
+    
+    // 成功处理完毕，向大堂经理汇报 0 (代表 OK)
+    Ok(0)
+}

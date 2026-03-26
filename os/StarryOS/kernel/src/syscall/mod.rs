@@ -628,7 +628,7 @@ pub fn handle_syscall(uctx: &mut UserContext) {
         | Sysno::memfd_secret => sys_dummy_fd(sysno),
 
         Sysno::timer_create | Sysno::timer_gettime | Sysno::timer_settime => Ok(0),
-
+        Sysno::getcpu => sys_getcpu(uctx.arg0() as _, uctx.arg1() as _),
         _ => {
             warn!("Unimplemented syscall: {sysno}");
             Err(AxError::Unsupported)
