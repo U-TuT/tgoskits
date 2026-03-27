@@ -131,12 +131,8 @@ pub fn sys_faccessat2(dirfd: c_int, path: *const c_char, mode: u32, flags: u32) 
 
     Ok(0)
 }
-
-// ==========================================
-// [StarryHacker 专属实现] 核心文件系统 ID (FSID) 哈希生成器
-// ==========================================
+/// Generate a dynamic FSID using FNV-1a hash based on device ID and FS type.
 fn generate_fsid(device_id: u64, fs_type: u64) -> __kernel_fsid_t {
-    // 采用专业内核级 FNV-1a 哈希混淆算法，拒绝写死 0！
     let mut h: u64 = 0xcbf29ce484222325;
     let prime: u64 = 0x100000001b3;
     
@@ -168,7 +164,8 @@ fn statfs(loc: &Location) -> AxResult<statfs> {
     result.f_bavail = stat.blocks_available as _;
     result.f_files = stat.file_count as _;
     result.f_ffree = stat.free_file_count as _;
-// [StarryHacker] 修复烂尾 TODO，调用专业算法生成动态 FSID
+// Generate dynamic fsid
+    result.f_fsid = generate_fsid(loc.mountpoint().device() as u64, stat.fs_type as u64);
     result.f_fsid = generate_fsid(loc.mountpoint().device() as u64, stat.fs_type as u64);
     result.f_namelen = stat.name_length as _;
     result.f_frsize = stat.fragment_size as _;
