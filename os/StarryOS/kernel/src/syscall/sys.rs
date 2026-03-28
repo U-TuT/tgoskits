@@ -77,7 +77,22 @@ pub fn sys_uname(name: *mut new_utsname) -> AxResult<isize> {
 
 pub fn sys_sysinfo(info: *mut sysinfo) -> AxResult<isize> {
     // FIXME: Zeroable
-    let mut kinfo: sysinfo = unsafe { core::mem::zeroed() };
+   let mut kinfo = sysinfo {
+        uptime: 0,
+        loads: [0; 3],
+        totalram: 0,
+        freeram: 0,
+        sharedram: 0,
+        bufferram: 0,
+        totalswap: 0,
+        freeswap: 0,
+        procs: processes().len() as _,
+        pad: 0,
+        totalhigh: 0,
+        freehigh: 0,
+        mem_unit: 1,
+        _f: [0; 0], 
+    };
     kinfo.procs = processes().len() as _;
     kinfo.mem_unit = 1;
     info.vm_write(kinfo)?;
