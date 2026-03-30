@@ -120,16 +120,14 @@ pub fn sys_setitimer(
     }
     Ok(0)
 }
-// ==========================================
-// [StarryHacker 专属实现] POSIX 定时器三兄弟
-// ==========================================
 
 /// sys_timer_create: 创建一个 POSIX 进程级定时器
 pub fn sys_timer_create(clockid: i32, sevp: *const usize, timerid: *mut u32) -> AxResult<isize> {
-   info!(
-            "sys_timer_create called! clockid: {}, sevp: {:?}, timerid: {:?}",
-            clockid, sevp, timerid
-        );
+    info!(
+        "sys_timer_create called! clockid: {}, sevp: {:?}, timerid: {:?}",
+        clockid, sevp, timerid
+    );
+    // TODO: 这是一个模拟实现，后续需要补全真实的定时器创建逻辑
     unsafe {
         // 如果外部程序传进来了合法的指针，我们给它分配一个默认的定时器 ID: 1
         if !timerid.is_null() {
@@ -141,10 +139,11 @@ pub fn sys_timer_create(clockid: i32, sevp: *const usize, timerid: *mut u32) -> 
 
 /// sys_timer_gettime: 获取定时器的剩余时间
 pub fn sys_timer_gettime(timerid: u32, curr_value: *mut usize) -> AxResult<isize> {
-   info!(
-            "sys_timer_gettime called! timerid: {}, curr_value: {:?}",
-            timerid, curr_value
-        );
+    info!(
+        "sys_timer_gettime called! timerid: {}, curr_value: {:?}",
+        timerid, curr_value
+    );
+    // TODO: 这是一个模拟实现，后续需要补全真实的获取剩余时间逻辑
     // 模拟返回：假装定时器刚刚触发完，没有剩余时间
     Ok(0)
 }
@@ -160,6 +159,7 @@ pub fn sys_timer_settime(
         "sys_timer_settime called! timerid: {}, flags: {}, new: {:?}, old: {:?}",
         timerid, flags, new_value, old_value
     );
+    // TODO: 这是一个模拟实现，后续需要补全真实的定时器启停逻辑
     // 模拟成功设置了定时器
     Ok(0)
 }
