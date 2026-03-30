@@ -98,11 +98,13 @@ pub fn sys_sysinfo(info: *mut sysinfo) -> AxResult<isize> {
 
 pub fn sys_syslog(type_: i32, _buf: *mut c_char, _len: usize) -> AxResult<isize> {
     info!("sys_syslog called! type: {}, len: {}", type_, _len);
+    
+    // TODO: 这是一个模拟实现，后续需要对接内核真实的日志读取和控制逻辑
     match type_ {
         2 | 3 | 4 => Ok(0),
         5 | 6 | 7 | 8 => Ok(0),
         9 => Ok(0),
-        10 => Ok(4096),
+        10 => Ok(4096), // 模拟返回系统日志缓冲区大小
         _ => Ok(0),
     }
 }
